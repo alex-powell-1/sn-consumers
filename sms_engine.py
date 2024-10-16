@@ -1,5 +1,3 @@
-import pytz
-from dateutil import tz
 from twilio.base.exceptions import TwilioRestException
 from twilio.rest import Client
 import creds
@@ -7,12 +5,6 @@ from database import Database
 from error_handler import SMSErrorHandler
 from utilities import PhoneNumber
 from traceback import format_exc as tb
-
-est = pytz.timezone('US/Eastern')
-utc = pytz.utc
-fmt = '%Y-%m-%d %H:%M:%S %Z%z'
-FROM_ZONE = tz.gettz('UTC')
-TO_ZONE = tz.gettz('America/New_York')
 
 
 class SMSEngine:

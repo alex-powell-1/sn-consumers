@@ -42,10 +42,6 @@ class RabbitMQConsumer:
             self.error_handler.print_errors()
 
     def start_consuming(self):
-        self.connect()
-        self.channel.basic_consume(queue=self.queue_name, on_message_callback=self.callback)
-        self.logger.info(f'Consumer {self.queue_name}: Waiting for messages. To exit press CTRL+C')
-        self.channel.start_consuming()
         try:
             self.connect()
             self.channel.basic_consume(queue=self.queue_name, on_message_callback=self.callback)
