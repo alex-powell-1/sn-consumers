@@ -6,10 +6,13 @@ from error_handler import ProcessInErrorHandler
 import pika
 import sys
 import time
+import os
+
+host = os.getenv('RABBITMQ_HOST')
 
 
 class RabbitMQConsumer:
-    def __init__(self, queue_name, callback_func, host='localhost', eh=ProcessInErrorHandler):
+    def __init__(self, queue_name, callback_func, host=host, eh=ProcessInErrorHandler):
         self.eh = eh
         self.logger = self.eh.logger
         self.error_handler = self.eh.error_handler
@@ -45,22 +48,23 @@ class RabbitMQConsumer:
         try:
             self.connect()
             self.channel.basic_consume(queue=self.queue_name, on_message_callback=self.callback)
+            print(f'Log Directory Contents {os.listdir('./logs/')})')
             self.logger.info(f'Consumer {self.queue_name}: Waiting for messages. To exit press CTRL+C')
             self.channel.start_consuming()
         except KeyboardInterrupt:
             sys.exit(0)
         # Don't recover if connection was closed by broker
         except pika.exceptions.ConnectionClosedByBroker:
-            pass
+            self.error_handler.add_error_v('Connection closed by broker, retry connection')
         # Don't recover on channel errors
         except pika.exceptions.AMQPChannelError:
-            pass
+            self.error_handler.add_error_v('Channel error, retry connection')
         # Don't recover on stream errors
         except pika.exceptions.StreamLostError:
-            pass
+            self.error_handler.add_error_v('Stream error, retry connection')
         # Recover on all other connection errors
         except pika.exceptions.AMQPConnectionError:
-            pass  # Connection error, retry connection
+            self.error_handler.add_error_v('Connection error, retry connection')
         except Exception as err:
             self.error_handler.add_error_v(error=err, origin=self.queue_name, traceback=tb())
             time.sleep(5)  # Wait before attempting reconnection
