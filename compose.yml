@@ -1,0 +1,58 @@
+
+services:
+  draft_create:
+    restart: always   
+    secrets:
+      - config_json
+    environment:
+      SECRET_FILE: /run/secrets/config_json
+    build: 
+      context: ./
+      dockerfile: ./consumers/draft_create/Dockerfile
+    volumes:
+      - ${LOG_DIRECTORY}:/app/logs
+      - ${PUBLIC_FILES}:/app/public_files
+  
+  draft_update:
+    restart: always   
+    secrets:
+      - config_json
+    environment:
+      SECRET_FILE: /run/secrets/config_json
+    build: 
+      context: ./
+      dockerfile: ./consumers/draft_update/Dockerfile
+    volumes:
+      - ${LOG_DIRECTORY}:/app/logs
+      - ${PUBLIC_FILES}:/app/public_files
+  
+  orders:
+    restart: always   
+    secrets:
+      - config_json
+    environment:
+      SECRET_FILE: /run/secrets/config_json
+    build: 
+      context: ./
+      dockerfile: ./consumers/orders/Dockerfile
+    volumes:
+      - ${LOG_DIRECTORY}:/app/logs
+      - ${PUBLIC_FILES}:/app/public_files
+  
+  marketing_leads:
+    restart: always   
+    secrets:
+      - config_json
+    environment:
+      SECRET_FILE: /run/secrets/config_json
+    build: 
+      context: ./
+      dockerfile: ./consumers/marketing_leads/Dockerfile
+    volumes:
+      - ${LOG_DIRECTORY}:/app/logs
+      - ${PUBLIC_FILES}:/app/public_files
+
+secrets:
+  config_json:
+    name: config_json
+    file: ${CONFIG_FILE_JSON}

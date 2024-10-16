@@ -1,0 +1,81 @@
+query draftOrder($id: ID!) {
+    node(id: $id) {
+        ... on DraftOrder {
+            id
+            name
+            status
+
+            order {
+                id
+                name
+            }
+
+            note2
+
+            events(first: 250) {
+                edges {
+                    node {
+                        id
+                        message
+                        createdAt
+                    }
+                }
+            }
+
+            customer {
+                id
+                firstName
+                lastName
+                email
+                phone
+            }
+
+            billingAddress {
+                phone
+            }
+
+            email
+
+            lineItems(first: 250) {
+                edges {
+                    node {
+                        name
+                        sku
+                        quantity
+                        originalUnitPriceSet {
+                            shopMoney {
+                                amount
+                            }
+                        }
+                    }
+                }
+            }
+
+            totalDiscountsSet {
+                shopMoney {
+                    amount
+                }
+            }
+
+            subtotalPriceSet {
+                shopMoney {
+                    amount
+                }
+            }
+
+            shippingLine {
+                discountedPriceSet {
+                    shopMoney {
+                        amount
+                    }
+                }
+            }
+        }
+    }
+}
+
+mutation draftOrderDelete($input: DraftOrderDeleteInput!) {
+    draftOrderDelete(input: $input) {
+        deletedId
+    }
+}

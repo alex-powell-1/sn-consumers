@@ -1,0 +1,224 @@
+mutation customerCreate($input: CustomerInput!) {
+  customerCreate(input: $input) {
+    userErrors {
+      field
+      message
+    }
+    customer {
+      id
+      email
+      phone
+      taxExempt
+      firstName
+      lastName
+      smsMarketingConsent {
+        marketingState
+        marketingOptInLevel
+      }
+      addresses {
+        address1
+        city
+        country
+        phone
+        zip
+      }
+      metafields(first: 50) {
+        edges {
+          node {
+            namespace
+            key
+            id
+            value
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation customerUpdate($input: CustomerInput!) {
+  customerUpdate(input: $input) {
+    userErrors {
+      field
+      message
+    }
+    customer {
+      id
+      firstName
+      lastName
+      metafields(first: 50) {
+        edges {
+          node {
+            namespace
+            key
+            id
+            value
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation customerDelete($id: ID!) {
+  customerDelete(input: { id: $id }) {
+    shop {
+      id
+    }
+    userErrors {
+      field
+      message
+    }
+    deletedCustomerId
+  }
+}
+
+query customers($first: Int, $after: String) {
+  customers(first: $first, after: $after) {
+    edges {
+      node {
+        id
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+query customerByEmail($email: String!) {
+  customers(first: 1, query: $email) {
+    edges {
+      node {
+        id
+      }
+    }
+  }
+}
+
+query customerByPhone($phone: String!) {
+  customers(first: 1, query: $phone) {
+    edges {
+      node {
+        id
+      }
+    }
+  }
+}
+
+query customer($id: ID!) {
+  customer(id: $id) {
+    addresses(first: 5) {
+      address1
+    }
+    canDelete
+    createdAt
+    defaultAddress {
+      address1
+    }
+    displayName
+    email
+    events(first: 50) {
+      edges {
+        node {
+          message
+        }
+      }
+    }
+    firstName
+    id
+    image {
+      id
+    }
+    lastName
+    legacyResourceId
+    lifetimeDuration
+    mergeable {
+      isMergeable
+      reason
+    }
+    metafield(key: "app_key", namespace: "affiliates") {
+      description
+    }
+    metafields(first: 50) {
+      edges {
+        node {
+          namespace
+          key
+          id
+        }
+      }
+    }
+    note
+    orders(first: 50) {
+      edges {
+        node {
+          id
+        }
+      }
+    }
+    numberOfOrders
+    phone
+    state
+    tags
+    taxExempt
+    amountSpent {
+      amount
+    }
+    updatedAt
+    validEmailAddress
+    verifiedEmail
+  }
+}
+
+query customerMetafields($id: ID!) {
+  customer(id: $id) {
+    metafields(first: 50) {
+      edges {
+        node {
+          namespace
+          key
+          id
+        }
+      }
+    }
+  }
+}
+
+mutation customerEmailMarketingConsentUpdate(
+  $input: CustomerEmailMarketingConsentUpdateInput!
+) {
+  customerEmailMarketingConsentUpdate(input: $input) {
+    customer {
+      id
+      email
+      emailMarketingConsent {
+        marketingState
+        marketingOptInLevel
+
+      }
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}
+
+mutation customerSmsMarketingConsentUpdate($input: CustomerSmsMarketingConsentUpdateInput!) {
+  customerSmsMarketingConsentUpdate(input: $input) {
+    userErrors {
+      field
+      message
+    }
+    customer {
+      id
+      phone
+      smsMarketingConsent {
+        marketingState
+        marketingOptInLevel
+      }
+    }
+  }
+}

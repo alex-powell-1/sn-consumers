@@ -1,0 +1,133 @@
+query productMedia($id: ID!) {
+  product(id: $id) {
+    featuredImage {
+      id
+    }
+    media(first: 75) {
+      nodes {
+        alt
+        id
+        mediaContentType
+        preview {
+          status
+          image {
+            altText
+            height
+            id
+            url
+            metafield(namespace: "product-image", key: "image_name") {
+              id
+              key
+              namespace
+              value
+            }
+            width
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation productCreateMedia($media: [CreateMediaInput!]!, $productId: ID!) {
+  productCreateMedia(media: $media, productId: $productId) {
+    media {
+      id
+      alt
+      mediaContentType
+      status
+    }
+    mediaUserErrors {
+      field
+      message
+    }
+    product {
+      id
+      title
+    }
+  }
+}
+
+mutation productUpdateMedia($media: [UpdateMediaInput!]!, $productId: ID!) {
+  productUpdateMedia(media: $media, productId: $productId) {
+    media {
+      id
+      alt
+      mediaContentType
+      status
+    }
+    mediaUserErrors {
+      field
+      message
+    }
+    product {
+      id
+      title
+    }
+  }
+}
+
+mutation productDeleteMedia($mediaIds: [ID!]!, $productId: ID!) {
+  productDeleteMedia(mediaIds: $mediaIds, productId: $productId) {
+    deletedMediaIds
+    deletedProductImageIds
+    mediaUserErrors {
+      field
+      message
+    }
+    product {
+      id
+      title
+      media(first: 50) {
+        nodes {
+          alt
+          mediaContentType
+          status
+        }
+      }
+    }
+  }
+}
+
+mutation productReorderMedia($id: ID!, $moves: [MoveInput!]!) {
+  productReorderMedia(id: $id, moves: $moves) {
+    job {
+      id
+    }
+  }
+}
+
+mutation productVariantAppendMedia(
+  $productId: ID!
+  $variantMedia: [ProductVariantAppendMediaInput!]!
+) {
+  productVariantAppendMedia(
+    productId: $productId
+    variantMedia: $variantMedia
+  ) {
+    product {
+      id
+    }
+    productVariants {
+      id
+    }
+    userErrors {
+      field
+      message
+    }
+  }
+}
+
+mutation productVariantDetachMedia(
+  $productId: ID!
+  $variantMedia: [ProductVariantDetachMediaInput!]!
+) {
+  productVariantDetachMedia(
+    productId: $productId
+    variantMedia: $variantMedia
+  ) {
+    product {
+      id
+    }
+  }
+}
